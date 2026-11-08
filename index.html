@@ -271,22 +271,99 @@ body[data-scenery="true"] .world-shade, body[data-scenery="true"] .character { v
   body[data-screen="chapter"] .stage { padding-top: 0; }
   .edition { font-size: .64rem; }
 }
-.dispatch-planner, #registration-form {
+#registration-form {
   border: 1px solid var(--accent, #00b9b5);
   padding: 1rem;
 }
-.dispatch-planner label, #registration-form > label {
+#registration-form > label {
   display: block;
   font-weight: 700;
 }
+.dispatch-planner {
+  min-width: 0;
+  margin: .85rem 0 0;
+  padding: clamp(.85rem, 2vw, 1.25rem);
+  border: 1px solid #557377;
+  border-radius: 12px;
+  background: #1e3137;
+}
+.dispatch-planner legend, .dispatch-planner h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+.dispatch-planner legend { padding: 0 .45rem; }
+.dispatch-planner h2 { margin: 0 0 .4rem; }
+.dispatch-planner .notice { margin: 0 0 .9rem; }
+.dispatch-totals, .dispatch-priorities {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .75rem;
+}
+.dispatch-water { --task-color: var(--cra-turquoise); }
+.dispatch-kits { --task-color: var(--cra-yellow); }
+.dispatch-totals > div, .dispatch-priority {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .2rem;
+  min-width: 0;
+  padding: .65rem .8rem;
+  border: 1px solid #577277;
+  border-top: 3px solid var(--task-color);
+  border-radius: 8px;
+  background: #17282e;
+  color: var(--text);
+  text-align: left;
+}
+.dispatch-totals strong { color: var(--task-color); font-size: 1.3rem; }
+.dispatch-priority:hover { border-color: var(--task-color); background: #274047; }
+.dispatch-priority strong { color: var(--task-color); }
+.dispatch-priority span, .dispatch-scale { font-size: .9rem; }
 #dispatch-hours {
+  appearance: none;
+  display: block;
   width: 100%;
-  min-height: 44px;
-  accent-color: #00b9b5;
+  height: 44px;
+  margin: .25rem 0 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  --dispatch-track: linear-gradient(to right, var(--cra-turquoise) 0 43%, var(--cra-yellow) 57% 100%);
 }
-.dispatch-alternative {
-  margin-top: 1rem;
+#dispatch-hours::-webkit-slider-runnable-track {
+  height: 12px;
+  border-radius: 8px;
+  background: var(--dispatch-track);
 }
+#dispatch-hours::-moz-range-track {
+  height: 12px;
+  border-radius: 8px;
+  background: var(--dispatch-track);
+}
+#dispatch-hours::-webkit-slider-thumb {
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  margin-top: -6px;
+  border: 3px solid #17282e;
+  border-radius: 50%;
+  background: #fff4df;
+  box-shadow: 0 0 0 2px #fff4df;
+}
+#dispatch-hours::-moz-range-thumb {
+  box-sizing: border-box;
+  width: 24px;
+  height: 24px;
+  border: 3px solid #17282e;
+  border-radius: 50%;
+  background: #fff4df;
+  box-shadow: 0 0 0 2px #fff4df;
+}
+.dispatch-scale { display: flex; justify-content: space-between; gap: .5rem; color: var(--muted); }
+.dispatch-preview { margin: .8rem 0 0; }
+.dispatch-alternative { margin-top: 1rem; }
+@media (max-width: 520px) { .dispatch-priorities { grid-template-columns: 1fr; } }
 #player-name {
   width: 100%;
   min-height: 44px;
@@ -351,7 +428,7 @@ body[data-scenery="true"] .world-shade, body[data-scenery="true"] .character { v
   <noscript>Activá JavaScript para jugar esta historia.</noscript>
   <script type="application/json" id="game-content">
 {
-  "schema_version": "3.4",
+  "schema_version": "3.4.1",
   "status": "guion editorial cerrado para prototipo; sin clave de puntuación",
   "language": "es-AR",
   "title": "Dilemas Humanitarios",
@@ -921,7 +998,7 @@ const app = document.querySelector("#app");
 const recording = document.body.hasAttribute("data-recording");
 const freshGame = () => ({
   screen: "home", decisionIndex: 0, answers: {}, pending: null, name: "", reflection: "", evidence: false,
-  priorities: [], kitHours: 0, registrationId: null
+  priorities: [], kitHours: 1, registrationId: null
 });
 let game = freshGame();
 let saving = false;
@@ -948,7 +1025,7 @@ function fragments(entries = []) {
 }
 
 function consequences(decision, letter) {
-  return (decision.id === 9 && letter !== "D" ? paragraphs(dispatchPreview(game.kitHours)) : "") +
+  return (decision.id === 9 && letter !== "D" ? paragraphs(dispatchSummary(game.kitHours)) : "") +
     paragraphs(decision.options[letter].outcome) +
     fragments(decision.outcome_tail_fragments).map(paragraphs).join("");
 }
@@ -1030,29 +1107,45 @@ function dispatchPlan(hours) {
   return hours === 0 ? "B" : hours === 3 ? "A" : "C";
 }
 
-function dispatchPreview(hours) {
-  const waterHours = 3 - hours;
-  const label = value => value === 1 ? "1 hora" : `${value} horas`;
-  const forecast = {
-    A: "Se pueden entregar los cinco kits. Queda pendiente confirmar el recorrido del agua.",
-    B: "Se puede confirmar el recorrido del agua. Queda pendiente entregar los kits.",
-    C: "Se puede avanzar en las dos tareas. Quedan entregas de kits y destinos de agua pendientes."
-  }[dispatchPlan(hours)];
-  return `Kits shelter: ${label(hours)} · Agua segura: ${label(waterHours)}. ${forecast}`;
-}
+const hoursLabel = hours => hours === 1 ? "1 hora" : `${hours} horas`;
+const dispatchSummary = hours => `Agua segura: ${hoursLabel(3 - hours)} · Kits shelter: ${hoursLabel(hours)}`;
+const dispatchForecast = [
+  "Podés confirmar el recorrido del agua. La entrega de kits queda pendiente.",
+  "Dedicás más tiempo a confirmar hogares y accesos para el agua. También podés iniciar la entrega de kits. Quedan pendientes en ambas tareas.",
+  "Dedicás más tiempo a entregar kits antes de la lluvia. También podés empezar a confirmar destinos de agua. Quedan pendientes en ambas tareas.",
+  "Podés entregar los cinco kits antes de la lluvia. La coordinación del agua queda pendiente."
+];
 
-function dispatchControls(decision, available) {
-  const canSplit = available.includes("C");
-  return `<fieldset class="dispatch-planner">
-    <legend>Repartí las tres horas de la jornada</legend>
-    <label for="dispatch-hours">Horas dedicadas a los kits shelter</label>
-    <input type="range" id="dispatch-hours" min="0" max="3" step="${canSplit ? 1 : 3}" value="${game.kitHours}"
-      aria-describedby="dispatch-preview" aria-valuetext="${escaped(dispatchPreview(game.kitHours))}">
-    <p id="dispatch-preview" role="status">${escaped(dispatchPreview(game.kitHours))}</p>
-    ${canSplit ? "" : `<p class="notice"><strong>Operativo dividido no disponible.</strong> ${escaped(decision.options.C.unavailable)}</p>`}
-    ${actions(button("dispatch", "Proponer este reparto"))}
-  </fieldset>
-  <div class="dispatch-alternative"><p>También podés dedicar la primera hora a verificar los casos pendientes.</p>
+function dispatchControls(available) {
+  const hours = game.kitHours;
+  const planner = available.includes("C")
+    ? `<fieldset class="dispatch-planner">
+      <legend>Repartí las 3 horas del equipo</legend>
+      <p class="notice" id="dispatch-hint">Mové el control en pasos de una hora. Cada hora que sumás a una tarea se resta de la otra.</p>
+      <div class="dispatch-totals" aria-hidden="true">
+        <div class="dispatch-water"><span>Agua segura</span><strong id="water-total">${hoursLabel(3 - hours)}</strong></div>
+        <div class="dispatch-kits"><span>Kits shelter</span><strong id="kits-total">${hoursLabel(hours)}</strong></div>
+      </div>
+      <input type="range" id="dispatch-hours" min="0" max="3" step="1" value="${hours}"
+        aria-label="Reparto de horas entre agua segura y kits shelter" aria-describedby="dispatch-hint dispatch-preview"
+        aria-valuetext="${escaped(dispatchSummary(hours))}">
+      <div class="dispatch-scale" aria-hidden="true"><span>Todo a agua</span><span>Todo a kits</span></div>
+      <p class="dispatch-preview" id="dispatch-preview">${escaped(dispatchForecast[hours])}</p>
+      ${actions(button("dispatch", "Proponer este reparto"))}
+    </fieldset>`
+    : `<section class="dispatch-planner" aria-labelledby="dispatch-priority">
+      <h2 id="dispatch-priority">Elegí la prioridad del sábado</h2>
+      <p class="notice">El viernes quedaron visitas pendientes. Para repartir el equipo primero habría que confirmar los destinos del agua. Con la información de hoy, el equipo puede concentrarse en una tarea.</p>
+      <div class="dispatch-priorities">
+        <button type="button" class="dispatch-priority dispatch-water" data-action="dispatch" data-letter="B">
+          <strong>Coordinar agua segura</strong><span>3 horas para confirmar hogares, accesos y recorrido con el municipio.</span>
+        </button>
+        <button type="button" class="dispatch-priority dispatch-kits" data-action="dispatch" data-letter="A">
+          <strong>Entregar los kits shelter</strong><span>3 horas para llevar lonas y herramientas a cinco viviendas antes de la lluvia.</span>
+        </button>
+      </div>
+    </section>`;
+  return planner + `<div class="dispatch-alternative"><p>También podés dedicar la primera hora a verificar los casos pendientes.</p>
   ${actions(button("verify-dispatch", "Verificar primero", true))}</div>`;
 }
 
@@ -1073,7 +1166,7 @@ function choiceScreen(decision, chapter) {
     </div>${style === "briefing" && !game.evidence
       ? actions(button("read", briefing[decision.id]))
       : `${decision.briefing_card ? `<dl class="context-card">${Object.entries(decision.briefing_card).map(([label, value]) => `<dt>${escaped(label)}</dt><dd>${escaped(value)}</dd>`).join("")}</dl>` : ""}
-      ${decision.priority_tasks ? priorityChecklist(decision) : decision.id === 9 ? dispatchControls(decision, available) : `<div class="options ${style}" role="group" aria-label="Alternativas">${options}</div>`}`}`;
+      ${decision.priority_tasks ? priorityChecklist(decision) : decision.id === 9 ? dispatchControls(available) : `<div class="options ${style}" role="group" aria-label="Alternativas">${options}</div>`}`}`;
 
 }
 
@@ -1257,9 +1350,10 @@ app.addEventListener("input", event => {
   if (event.target.id === "player-name") event.target.setCustomValidity("");
   if (event.target.id === "dispatch-hours") {
     game.kitHours = Number(event.target.value);
-    const preview = dispatchPreview(game.kitHours);
-    event.target.setAttribute("aria-valuetext", preview);
-    app.querySelector("#dispatch-preview").textContent = preview;
+    event.target.setAttribute("aria-valuetext", dispatchSummary(game.kitHours));
+    app.querySelector("#water-total").textContent = hoursLabel(3 - game.kitHours);
+    app.querySelector("#kits-total").textContent = hoursLabel(game.kitHours);
+    app.querySelector("#dispatch-preview").textContent = dispatchForecast[game.kitHours];
   }
 });
 
@@ -1313,6 +1407,8 @@ app.addEventListener("click", event => {
     case "dispatch":
     case "verify-dispatch":
       if (game.screen !== "choice" || decisions[game.decisionIndex].id !== 9) return;
+      if (action === "dispatch" && letter === "A") game.kitHours = 3;
+      if (action === "dispatch" && letter === "B") game.kitHours = 0;
       game.pending = action === "dispatch" ? dispatchPlan(game.kitHours) : "D";
       if (!availableOptions(decisions[game.decisionIndex]).includes(game.pending)) return;
       game.screen = "outcome"; break;
