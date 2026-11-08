@@ -1086,7 +1086,7 @@ render(false);
     }
     sceneToggle.addEventListener("click", () => showScenery(!app.hidden));
     document.querySelector(".stage").addEventListener("click", event => {
-      if (!app.contains(event.target)) showScenery(!app.hidden);
+      if (!event.composedPath().includes(app)) showScenery(!app.hidden);
     });
     document.addEventListener("keydown", event => {
       if (event.key !== "Escape") return;
