@@ -995,7 +995,8 @@ body[data-scenery="true"] .world-shade, body[data-scenery="true"] .character { v
 const content = JSON.parse(document.querySelector("#game-content").textContent);
 const {ui, chapters, decisions} = content;
 const app = document.querySelector("#app");
-const recording = document.body.hasAttribute("data-recording");
+const registroUrl = "https://script.google.com/macros/s/AKfycbzbl2IpTQsSl2MLF_5g_iNtkfb6qt-ZKE-YrsOHMAb3VbP9E-r9olMMGI2CJb451lqHbw/exec";
+const recording = Boolean(registroUrl) || document.body.hasAttribute("data-recording");
 const freshGame = () => ({
   screen: "home", decisionIndex: 0, answers: {}, pending: null, name: "", reflection: "", evidence: false,
   priorities: [], kitHours: 1, registrationId: null
@@ -1055,7 +1056,7 @@ function registrationScreen() {
     `<form id="registration-form">
       <label for="player-name">Nombre del jugador (obligatorio)</label>
       <input id="player-name" name="player-name" autocomplete="name" required maxlength="60">
-      <p>La Filial Luján guardará tu nombre y tus decisiones confirmadas para revisar esta actividad formativa.</p>
+      <p>La Filial Luján guardará tu nombre y cada decisión que confirmes, aunque no termines la partida. El equipo de Gestión del Voluntariado usa este registro privado para revisar la actividad formativa.</p>
       <label class="registration-consent"><input type="checkbox" required> Acepto el registro de mi participación.</label>
       <div class="actions"><button class="primary" type="submit">Empezar la partida</button></div>
       <p class="notice" role="status" id="save-status"></p>
@@ -1272,14 +1273,15 @@ async function saveProgress(answers, control) {
   const status = document.querySelector("#save-status");
   status.textContent = "Guardando…";
   try {
-    const response = await fetch("/api/partidas", {
-      method: "POST", headers: {"Content-Type": "application/json"},
+    const response = await fetch(registroUrl || "/api/partidas", {
+      method: "POST", headers: {"Content-Type": registroUrl ? "text/plain;charset=UTF-8" : "application/json"},
+      credentials: "omit", signal: AbortSignal.timeout(15000),
       body: JSON.stringify({
         id: game.registrationId, name: game.name, answers, consent: true,
         kitHours: answers[9] && answers[9] !== "D" ? game.kitHours : null
       })
     });
-    if (!response.ok) throw new Error("Error de guardado");
+    if (!response.ok || (registroUrl && (await response.json()).saved !== true)) throw new Error("Error de guardado");
     return true;
   } catch {
     status.textContent = "No se pudo guardar. Revisá tu conexión y volvé a intentar.";
