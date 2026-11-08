@@ -234,6 +234,11 @@ body[data-scene="reparto"] .world { background-image: var(--sunset-art); }
 .dialogue { cursor: auto; }
 .dialogue[hidden] { display: none; }
 body[data-scenery="true"] .world-shade, body[data-scenery="true"] .character { visibility: hidden; }
+.result-turns ul { list-style: none; padding: 0; margin: 0; }
+.result-turns .result-item { border-left: 3px solid var(--accent); }
+.result-turns .result-item p { margin: 6px 0 0; }
+.result-turns .result-item strong { display: block; color: var(--accent); font-size: .78rem; }
+.result-details, .result-reflection { margin-top: 14px; }
 @media(max-width: 700px) {
   body[data-screen="chapter"] .stage { padding-top: 0; }
   .edition { font-size: .64rem; }
@@ -932,6 +937,17 @@ function chapterScreen(decision, chapter) {
 }
 
 function resultScreen() {
+  const turningPoints = [[1, 3], [4, 5], [6, 9]].map(([fromId, toId]) => {
+    const from = decisions.find(decision => decision.id === fromId);
+    const to = decisions.find(decision => decision.id === toId);
+    const answer = game.answers[fromId];
+    const link = to.intro_fragments.find(fragment => fragment.source_decision === fromId);
+    return `<li class="result-item">
+      <h3>${escaped(from.title)} → ${escaped(to.title)}</h3>
+      <p><strong>Lo que elegiste</strong> ${escaped(from.options[answer].text)}</p>
+      <p><strong>Lo que apareció después</strong> ${escaped(link.text_by_choice[answer])}</p>
+    </li>`;
+  }).join("");
   const recap = chapters.map(chapter => {
     const items = decisions.filter(decision => decision.chapter_id === chapter.id).map(decision => {
       const letter = game.answers[decision.id];
@@ -947,9 +963,19 @@ function resultScreen() {
   }).join("");
   return eyebrow("Historia completada") + heading(ui.result_title) +
     `<p class="lead">${escaped(ui.result_subtitle)}</p>${paragraphs(ui.result_intro)}
-    ${recap}
+    <section class="result-turns" aria-labelledby="turning-points-title">
+      <h2 id="turning-points-title">Tres decisiones que cambiaron tu recorrido</h2>
+      <ul>${turningPoints}</ul>
+    </section>
+    <details class="disclosure result-details">
+      <summary>Ver las nueve decisiones y sus principios</summary>
+      <div class="details-content">${recap}</div>
+    </details>
     <div class="box result-reflection">
-      <label for="reflection">${escaped(ui.result_reflection_label)}</label>
+      <h2>Para conversar después de jugar</h2>
+      <p>¿Qué decisión tuya cambió algo más adelante? ¿Hubo algún momento en que dejaste de leer con atención?</p>
+      <label for="reflection">Si querés, anotá una idea para la charla.</label>
+      <p class="notice">Esta nota se usa solo en esta pantalla.</p>
       <textarea id="reflection" rows="3" autocomplete="off">${escaped(game.reflection)}</textarea>
     </div>` + actions(button("copy", ui.result_copy_button), button("replay", ui.result_replay_button, true)) +
     `<div id="copy-status" class="copy-status" role="status"></div>
