@@ -239,6 +239,34 @@ body[data-scenery="true"] .world-shade, body[data-scenery="true"] .character { v
 .result-turns .result-item p { margin: 6px 0 0; }
 .result-turns .result-item strong { display: block; color: var(--accent); font-size: .78rem; }
 .result-details, .result-reflection { margin-top: 14px; }
+:root {
+  --cra-turquoise: #00b9b5;
+  --cra-blue: #005da5;
+  --cra-violet: #6b6eb3;
+  --cra-coral: #f15b47;
+  --cra-orange: #fbb161;
+  --cra-yellow: #ffd65c;
+  --accent: var(--cra-orange);
+}
+.primary { background: var(--cra-orange); border-color: var(--cra-orange); }
+.primary:hover { background: var(--cra-yellow); }
+.primary:disabled { opacity: .58; cursor: default; }
+:focus-visible { outline-color: var(--cra-yellow); }
+.segments .past { background: var(--cra-turquoise); }
+.segments .current { background: var(--cra-yellow); }
+.prior { border-left-color: var(--cra-blue); }
+.principles-panel { border-color: var(--cra-violet); }
+.context-card { padding: 12px 15px; background: #203840; border-left: 4px solid var(--cra-blue); }
+.context-card dt { font-weight: 700; color: var(--cra-turquoise); }
+.context-card dd { margin: 2px 0 8px; }
+.priority-list { min-width: 0; margin: 12px 0 0; padding: 12px; border: 1px solid var(--cra-violet); }
+.priority-list legend { padding: 0 6px; color: var(--cra-yellow); font-weight: 700; }
+.priority-item { display: flex; align-items: center; gap: 10px; min-height: 44px; margin-bottom: 5px; padding: 6px; background: #24363b; cursor: pointer; }
+.priority-item input { width: 18px; height: 18px; min-height: 0; flex: none; accent-color: var(--cra-turquoise); }
+#priority-status { font-size: .9rem; margin-top: 8px; }
+.option-unavailable { padding: 10px 12px; background: #253138; border-left: 3px solid var(--cra-coral); }
+.option-unavailable strong { color: var(--cra-coral); }
+.option-unavailable p { margin: 3px 0; }
 @media(max-width: 700px) {
   body[data-screen="chapter"] .stage { padding-top: 0; }
   .edition { font-size: .64rem; }
@@ -298,7 +326,7 @@ body[data-scenery="true"] .world-shade, body[data-scenery="true"] .character { v
   <noscript>Activá JavaScript para jugar esta historia.</noscript>
   <script type="application/json" id="game-content">
 {
-  "schema_version": "3.2",
+  "schema_version": "3.3",
   "status": "guion editorial cerrado para prototipo; sin clave de puntuación",
   "language": "es-AR",
   "title": "Dilemas Humanitarios",
@@ -446,7 +474,7 @@ body[data-scenery="true"] .world-shade, body[data-scenery="true"] .character { v
           }
         }
       ],
-      "context": "Al terminar el relevamiento, el equipo reunió ocho relatos de problemas respiratorios. Esos relatos no prueban que la fábrica sea la causa. Las familias pidieron que sus datos de salud no se hagan públicos.\n\nUna radio pregunta si Cruz Roja confirmó contaminación. La nota saldrá hoy. Vos coordinaste el relevamiento, pero no sos quien habla oficialmente por la Filial. ¿Qué hacés?",
+      "context": "Una radio pregunta si Cruz Roja confirmó contaminación. La nota sale hoy. Vos coordinaste el relevamiento. ¿Qué hacés?",
       "options": {
         "A": {
           "text": "Pido a Comunicación que aclare qué se observó y qué todavía no se sabe.",
@@ -476,7 +504,12 @@ body[data-scenery="true"] .world-shade, body[data-scenery="true"] .character { v
         "Imparcialidad"
       ],
       "designer_note": "Ninguna opción puede divulgar datos identificables. Distinguir relatos de evidencia causal; los cambios de titulares son efectos de terceros.",
-      "principle_feedback": "Se puede hablar de problemas humanitarios sin apoyar a un partido o acusar a una empresa. La Neutralidad no pide silencio, pero sí cuidado con lo que se afirma. La Humanidad también incluye proteger los datos y la dignidad de las personas."
+      "principle_feedback": "Se puede hablar de problemas humanitarios sin apoyar a un partido o acusar a una empresa. La Neutralidad no pide silencio, pero sí cuidado con lo que se afirma. La Humanidad también incluye proteger los datos y la dignidad de las personas.",
+      "briefing_card": {
+        "Qué sabemos": "El equipo recibió ocho relatos de problemas respiratorios. Las familias pidieron que sus datos de salud no se publiquen.",
+        "Qué falta confirmar": "Los relatos no permiten atribuir los problemas a la fábrica.",
+        "Quién puede responder": "El equipo de Comunicación de la Filial puede dar la respuesta oficial."
+      }
     },
     {
       "id": 4,
@@ -703,27 +736,34 @@ body[data-scenery="true"] .world-shade, body[data-scenery="true"] .character { v
           }
         }
       ],
-      "context": "Circula una acusación: una voluntaria que trabaja en la fábrica habría contado a la empresa datos de las familias. No hay pruebas de eso. Dos familias piden saber quién pudo ver sus respuestas.\n\nLas fichas están en un archivo digital al que pudieron entrar tres integrantes del equipo, incluida la voluntaria. No hay registro de quién abrió cada ficha. Mañana hay que decidir cómo usar recursos de la Filial, y hoy quedan ocho visitas por hacer. ¿Qué proponés?",
+      "context": "Circula una acusación: una voluntaria que trabaja en la fábrica habría contado a la empresa datos de las familias. No hay pruebas de eso. Dos familias piden saber quién pudo ver sus respuestas.\n\nLas fichas están en un archivo digital al que pudieron entrar tres integrantes del equipo, incluida la voluntaria. No hay registro de quién abrió cada ficha. Mañana hay que decidir cómo usar recursos de la Filial, y hoy quedan ocho visitas por hacer. El equipo solo tiene tiempo para priorizar dos tareas.",
       "options": {
         "A": {
-          "text": "Seguir con las entrevistas y ofrecer otra persona a quienes no quieran hablar con ella.",
-          "outcome": "Se completan seis de las ocho visitas. La voluntaria sigue trabajando y las familias pueden elegir con quién hablar. Hoy no se revisa el acceso al archivo.",
-          "summary": "Continuaste entrevistando y ofreciste otras personas, pero quedó pendiente revisar el acceso a los datos."
+          "priorities": [
+            "listen",
+            "visits"
+          ],
+          "text": "Escuchar a las personas involucradas y continuar las visitas.",
+          "outcome": "El equipo escucha por separado a la voluntaria y a las familias y completa seis de las ocho visitas. Queda pendiente revisar quién tiene acceso a las fichas.",
+          "summary": "Escuchaste a las personas involucradas y completaste seis visitas. Quedó pendiente revisar los accesos."
         },
         "B": {
-          "text": "Dedicar la mañana a revisar el archivo y limitar quién puede abrirlo, antes de seguir entrevistando.",
-          "outcome": "Se revisa quién tiene acceso al archivo y se reducen los permisos. No aparece ninguna prueba contra la voluntaria. Solo se completan dos visitas.",
-          "summary": "Revisaste los accesos a los datos, pero quedaron seis entrevistas pendientes."
-        },
-        "C": {
-          "text": "Ofrecerle otra tarea sin acceso a las fichas durante unos días, si ella está de acuerdo.",
-          "outcome": "La voluntaria acepta ayudar en otra tarea. El equipo completa cuatro visitas. Algunas personas creen que el cambio prueba que hubo un problema.",
-          "summary": "Cambiaste temporalmente sus tareas con su acuerdo; siguió la atención, pero hubo nuevas sospechas."
+          "priorities": [
+            "review",
+            "visits"
+          ],
+          "text": "Revisar los accesos a las fichas y continuar las visitas.",
+          "outcome": "El equipo revisa y limita los permisos del archivo y completa cuatro visitas. No encuentra pruebas contra la voluntaria. Queda pendiente escuchar a las personas involucradas.",
+          "summary": "Revisaste los accesos y completaste cuatro visitas. Quedó pendiente escuchar a las personas involucradas."
         },
         "D": {
-          "text": "Escuchar por separado a la voluntaria y a las familias que preguntaron por sus datos, antes de seguir.",
-          "outcome": "Las personas pueden expresar sus inquietudes sin enfrentarse entre sí. Se completan tres visitas. El archivo todavía necesita una revisión de accesos.",
-          "summary": "Escuchaste a la voluntaria y a las familias, pero quedaron entrevistas y controles de datos pendientes."
+          "priorities": [
+            "review",
+            "listen"
+          ],
+          "text": "Revisar los accesos a las fichas y escuchar a las personas involucradas.",
+          "outcome": "El equipo revisa los accesos y escucha por separado a la voluntaria y a las familias. No encuentra pruebas contra la voluntaria. Quedan pendientes las ocho visitas.",
+          "summary": "Revisaste los accesos y escuchaste a las personas involucradas. Quedaron pendientes las ocho visitas."
         }
       },
       "outcome_tail_fragments": [],
@@ -734,7 +774,12 @@ body[data-scenery="true"] .world-shade, body[data-scenery="true"] .character { v
         "Independencia"
       ],
       "designer_note": "Prohibido asumir filtración de datos y prohibido inventar que existe registro de accesos. Las alternativas deben producir distintos números de entrevistas: esa información afecta realmente D9. La recomendación institucional no es un procedimiento de investigación real.",
-      "principle_feedback": "No se puede tratar como culpable a una voluntaria solo por un rumor. La Unidad y la Imparcialidad piden un trato justo. La Humanidad también exige cuidar la privacidad de las familias y tomar en serio sus preguntas sobre sus datos."
+      "principle_feedback": "No se puede tratar como culpable a una voluntaria solo por un rumor. La Unidad y la Imparcialidad piden un trato justo. La Humanidad también exige cuidar la privacidad de las familias y tomar en serio sus preguntas sobre sus datos.",
+      "priority_tasks": {
+        "review": "Revisar quién puede acceder a las fichas",
+        "listen": "Escuchar a la voluntaria y a las familias",
+        "visits": "Continuar las visitas de relevamiento"
+      }
     },
     {
       "id": 9,
@@ -754,10 +799,9 @@ body[data-scenery="true"] .world-shade, body[data-scenery="true"] .character { v
         {
           "source_decision": 8,
           "text_by_choice": {
-            "A": "Ayer se completaron seis de ocho visitas, así que el equipo tiene información reciente sobre varias familias.",
-            "B": "Ayer se completaron dos de ocho visitas porque se revisaron los datos. Todavía falta comprobar la situación de varias familias.",
-            "C": "Ayer se completaron cuatro de ocho visitas tras cambiar algunas tareas. No todos los casos están revisados.",
-            "D": "Ayer se completaron tres de ocho visitas porque se escucharon las preocupaciones sobre los datos. Todavía falta información."
+            "A": "El viernes se completaron seis visitas. El equipo tiene información reciente de varias familias, aunque quedó pendiente revisar los accesos al archivo.",
+            "B": "El viernes se completaron cuatro visitas y se revisaron los accesos al archivo. Faltan visitas y queda una conversación pendiente.",
+            "D": "El viernes se revisaron los accesos y se escuchó a las personas involucradas. Como no se completaron visitas nuevas, falta confirmar los destinos pendientes antes de poder dividir el operativo."
           }
         },
         {
@@ -770,7 +814,7 @@ body[data-scenery="true"] .world-shade, body[data-scenery="true"] .character { v
           }
         }
       ],
-      "context": "El sábado hay seis personas voluntarias disponibles durante tres horas y se anuncia lluvia para la noche. El relevamiento confirmó filtraciones graves en cinco viviendas de la zona rural. La Filial dispone de cinco bolsones de la Federación Internacional para protección temporal de viviendas, conocidos como kits shelter, con lonas y herramientas como palas. Los kits de limpieza e higiene se entregan según lo relevado. Si quedan otras necesidades, la Filial puede comprar insumos con fondos de donaciones en dinero y organizar su entrega más adelante.\n\nEl municipio puede acercar agua segura a ocho hogares, pero necesita que el equipo confirme destinos y accesos a tiempo. Con el equipo disponible se puede completar la entrega de los cinco kits shelter o cerrar toda la coordinación del agua. Si se divide, ambas tareas quedan parcialmente cubiertas. ¿Qué proponés?",
+      "context": "El sábado hay seis personas voluntarias disponibles durante tres horas y se anuncia lluvia para la noche. El relevamiento confirmó filtraciones graves en cinco viviendas de la zona rural. La Filial dispone de cinco bolsones de la Federación Internacional para protección temporal de viviendas, conocidos como kits shelter, con lonas y herramientas como palas. Los kits de limpieza e higiene se entregan según lo relevado. Si quedan otras necesidades, la Filial puede comprar insumos con fondos de donaciones en dinero y organizar su entrega más adelante.\n\nEl municipio puede acercar agua segura a ocho hogares, pero necesita que el equipo confirme destinos y accesos a tiempo. Con el equipo disponible se puede completar la entrega de los cinco kits shelter o cerrar toda la coordinación del agua. ¿Qué proponés?",
       "options": {
         "A": {
           "text": "Entregar los cinco kits shelter a los hogares relevados y pedir a otro actor que termine de coordinar el agua.",
@@ -785,7 +829,17 @@ body[data-scenery="true"] .world-shade, body[data-scenery="true"] .character { v
         "C": {
           "text": "Dividir al equipo entre la entrega de kits shelter y la coordinación del agua.",
           "outcome": "Se entregan algunos kits y se confirman algunos destinos para el agua. Varias familias todavía esperan saber cuándo llegará la asistencia.",
-          "summary": "Avanzaste en las dos tareas, pero ninguna quedó completamente cubierta."
+          "summary": "Avanzaste en las dos tareas, pero ninguna quedó completamente cubierta.",
+          "requires": [
+            {
+              "decision_id": 8,
+              "choices": [
+                "A",
+                "B"
+              ]
+            }
+          ],
+          "unavailable": "El viernes quedaron pendientes todas las visitas nuevas. El equipo puede priorizar una tarea o verificar los casos primero, pero no dividir el operativo sin confirmar los destinos pendientes."
         },
         "D": {
           "text": "Usar la primera hora para verificar los casos pendientes antes de definir la prioridad.",
@@ -797,10 +851,9 @@ body[data-scenery="true"] .world-shade, body[data-scenery="true"] .character { v
         {
           "source_decision": 8,
           "text_by_choice": {
-            "A": "El equipo contaba con información de seis visitas, pero todavía había dos familias sin entrevistar.",
-            "B": "Con solo dos entrevistas completas, siguieron faltando datos para ordenar todos los casos.",
-            "C": "Con cuatro entrevistas completas, algunas necesidades seguían sin comprobarse.",
-            "D": "Las conversaciones ayudaron a recuperar diálogo, aunque varias entrevistas seguían pendientes."
+            "A": "El equipo había completado seis de las ocho visitas el viernes.",
+            "B": "El equipo había completado cuatro visitas el viernes; varios casos todavía requerían verificación.",
+            "D": "Sin visitas nuevas del viernes, el equipo dependía del relevamiento que ya tenía y de lo que pudiera verificar el sábado."
           }
         }
       ],
@@ -839,10 +892,9 @@ body[data-scenery="true"] .world-shade, body[data-scenery="true"] .character { v
 
 const content = JSON.parse(document.querySelector("#game-content").textContent);
 const {ui, chapters, decisions} = content;
-const letters = ["A", "B", "C", "D"];
 const app = document.querySelector("#app");
 const freshGame = () => ({
-  screen: "home", decisionIndex: 0, answers: {}, pending: null, name: "", reflection: "", id: "", saved: false, saving: false, error: "", evidence: false
+  screen: "home", decisionIndex: 0, answers: {}, pending: null, name: "", reflection: "", evidence: false, priorities: []
 });
 let game = freshGame();
 
@@ -902,19 +954,55 @@ const sceneLabels = {1:"Relevamiento barrial",2:"Conversación en el barrio",3:"
 const briefing = {3:"Revisar la situación antes de responder",5:"Leer el reporte antes de decidir",8:"Abrir la ficha del caso"};
 const decisionStyle = id => briefing[id] ? "briefing" : [4,6,9].includes(id) ? "dispatch" : "conversation";
 
+function availableOptions(decision) {
+  return Object.keys(decision.options).filter(letter => !decision.options[letter].requires?.some(
+    ({decision_id, choices}) => !choices.includes(game.answers[decision_id])
+  ));
+}
+
+function selectedPlan(decision) {
+  return Object.keys(decision.options).find(letter => {
+    const keys = decision.options[letter].priorities;
+    return keys.length === game.priorities.length && keys.every(key => game.priorities.includes(key));
+  });
+}
+
+function priorityChecklist(decision) {
+  const controls = Object.entries(decision.priority_tasks).map(([key, label]) =>
+    `<label class="priority-item"><input type="checkbox" name="priority" value="${key}"${game.priorities.includes(key) ? " checked" : ""}> <span>${escaped(label)}</span></label>`
+  ).join("");
+  return `<fieldset class="priority-list">
+      <legend>Elegí dos prioridades</legend>
+      ${controls}
+      <p id="priority-status" role="status">${priorityStatus(decision)}</p>
+      <button type="button" class="primary" data-action="prioritize"${game.priorities.length === 2 ? "" : " disabled"}>Ver qué pasó</button>
+    </fieldset>`;
+}
+
+function priorityStatus(decision) {
+  if (game.priorities.length !== 2) return `${game.priorities.length} de 2 seleccionadas`;
+  const pending = Object.keys(decision.priority_tasks).find(key => !game.priorities.includes(key));
+  return "Queda pendiente: " + decision.priority_tasks[pending];
+}
+
 function choiceScreen(decision, chapter) {
   const prior = fragments(decision.intro_fragments);
   const style = decisionStyle(decision.id);
-  const options = letters.map(letter => `<button class="option" type="button" data-action="choose" data-letter="${letter}">
+  const available = availableOptions(decision);
+  const options = Object.keys(decision.options).map(letter => available.includes(letter)
+    ? `<button class="option" type="button" data-action="choose" data-letter="${letter}">
     ${style === "dispatch" ? '<span class="dispatch-mark" aria-hidden="true">›</span>' : ""}<span>${escaped(decision.options[letter].text)}</span>
-  </button>`).join("");
+  </button>`
+    : `<div class="option-unavailable"><strong>Acción no disponible</strong><p>${escaped(decision.options[letter].text)}</p><p>${escaped(decision.options[letter].unavailable)}</p></div>`
+  ).join("");
   return progress(decision) + eyebrow(`${day(decision.id)} · ${sceneLabels[decision.id]}`) + heading(decision.title) +
     `<div class="context">
       ${prior.length ? `<div class="prior">${prior.map(paragraphs).join("")}</div>` : ""}
       ${paragraphs(decision.context)}
     </div>${style === "briefing" && !game.evidence
       ? actions(button("read", briefing[decision.id]))
-      : `<div class="options ${style}" role="group" aria-label="Alternativas">${options}</div>`}`;
+      : `${decision.briefing_card ? `<dl class="context-card">${Object.entries(decision.briefing_card).map(([label, value]) => `<dt>${escaped(label)}</dt><dd>${escaped(value)}</dd>`).join("")}</dl>` : ""}
+      ${decision.priority_tasks ? priorityChecklist(decision) : `<div class="options ${style}" role="group" aria-label="Alternativas">${options}</div>`}`}`;
 
 }
 
@@ -937,7 +1025,7 @@ function chapterScreen(decision, chapter) {
 }
 
 function resultScreen() {
-  const turningPoints = [[1, 3], [4, 5], [6, 9]].map(([fromId, toId]) => {
+  const turningPoints = [[4, 5], [6, 9], [8, 9]].map(([fromId, toId]) => {
     const from = decisions.find(decision => decision.id === fromId);
     const to = decisions.find(decision => decision.id === toId);
     const answer = game.answers[fromId];
@@ -1014,7 +1102,7 @@ function advance() {
 
 function confirmChoice() {
   const decision = decisions[game.decisionIndex];
-  if (game.screen !== "outcome" || !letters.includes(game.pending) || game.answers[decision.id]) return;
+  if (game.screen !== "outcome" || !availableOptions(decision).includes(game.pending) || game.answers[decision.id]) return;
   game.answers[decision.id] = game.pending;
   game.pending = null;
   if (decision.id === decisions.length) game.screen = "result";
@@ -1068,6 +1156,20 @@ app.addEventListener("input", event => {
   if (event.target.id === "reflection") game.reflection = event.target.value;
 });
 
+app.addEventListener("change", event => {
+  const field = event.target;
+  if (field.name !== "priority") return;
+  const status = app.querySelector("#priority-status");
+  if (field.checked && game.priorities.length === 2) {
+    field.checked = false;
+    status.textContent = "Ya elegiste dos. Desmarcá una para cambiar tu plan.";
+    return;
+  }
+  game.priorities = field.checked ? [...game.priorities, field.value] : game.priorities.filter(key => key !== field.value);
+  app.querySelector('[data-action="prioritize"]').disabled = game.priorities.length !== 2;
+  status.textContent = priorityStatus(decisions[game.decisionIndex]);
+});
+
 app.addEventListener("click", event => {
   const control = event.target.closest("button[data-action]");
   if (!control) return;
@@ -1076,7 +1178,13 @@ app.addEventListener("click", event => {
     case "start": game.screen = "intro"; break;
     case "read": game.evidence = true; break;
     case "play": game.screen = "choice"; break;
-    case "choose": game.pending = letter; game.screen = "outcome"; break;
+    case "choose":
+      if (!availableOptions(decisions[game.decisionIndex]).includes(letter)) return;
+      game.pending = letter; game.screen = "outcome"; break;
+    case "prioritize":
+      game.pending = selectedPlan(decisions[game.decisionIndex]);
+      if (!game.pending) return;
+      game.screen = "outcome"; break;
     case "change": game.pending = null; game.screen = "choice"; break;
     case "confirm": confirmChoice(); break;
     case "next": advance(); break;
